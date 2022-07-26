@@ -31,7 +31,7 @@ def database_connect(host_name, user_name, user_password, database_name):
 #                 cursor = actual_connect.cursor()
 #                 command = """INSERT INTO `shop_tb.diapers`
 #                 (`type_goods`, `age`, `size`, `vendor_code`, `name_goods`, `description`,
-#                 `units`, `weight`, `quantity`, `diameter`, `color`, `price`, `picture`, `link`)
+#                 `units`, `weight`, `quantity`, `diameter`, `color`, `price`, `path_picture`, `site_link`)
 #                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 #                 if count > 0:
 #                     _, _, type_goods, age, size, vendor_code, name_goods, description, units, weight, quantity, \

@@ -4,3 +4,4 @@ env/
 *.log
 __pycache__/
 other_files/
+picture/
