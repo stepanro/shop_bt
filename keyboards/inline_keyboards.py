@@ -1,5 +1,5 @@
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from database.database import get_type_goods, get_age, get_size, get_number_validate_goods
+from database.database import get_type_goods, get_age, get_size, get_results
 from loader import bot
 
 
@@ -38,10 +38,15 @@ def type_size_keyboard(chat_id, user_id):
     return inline_keyboard
 
 
-def buy_keyboard():
+def buy_keyboard(chat_id, user_id):
     """ Функция возвращает клавиатуру для покупки товара """
+    with bot.retrieve_data(user_id=user_id, chat_id=chat_id) as data:
+        type_goods = data['type_goods']
+        type_age = data['type_age']
+        type_size = data['type_size']
+
     inline_keyboard = InlineKeyboardMarkup(row_width=2)
-    inline_keyboard.add(InlineKeyboardButton(text='Загрузить результаты?', callback_data='download_results'))
+    inline_keyboard.add(InlineKeyboardButton(text='Загрузить результаты?', switch_inline_query_current_chat=f'load|{type_goods}|{type_age}|{type_size}'))
     inline_keyboard.add(
                         InlineKeyboardButton(text='Назад', callback_data='back_to_size'),
                         InlineKeyboardButton(text='В начало каталога', callback_data='back_to_goods')

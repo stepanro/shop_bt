@@ -3,7 +3,7 @@ from config_data.config import DEFAULT_COMMANDS
 from keyboards.reply_keyboards import help_keyboard
 
 
-@bot.message_handler(func=lambda message: message.text == '❓ Помощь')
+@bot.message_handler(func=lambda message: message.text == '️❓Помощь')
 @bot.message_handler(commands=['help'])
 def halp(message):
     chat_id = message.chat.id
