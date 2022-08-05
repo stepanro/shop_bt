@@ -1,8 +1,8 @@
 from loader import bot
-from keyboards.inline_keyboards import type_goods_keyboard, type_age_keyboard, type_size_keyboard, buy_keyboard
+from keyboards.inline_keyboards import type_goods_keyboard, type_age_keyboard, type_size_keyboard, buy_keyboard, clarifying_keyboard
 from state.state import UserState
-from database.database import get_number_validate_goods, get_results
-from telebot.types import InlineQueryResultArticle, InputTextMessageContent, InputMediaPhoto, InlineQueryResultBase
+from database.database import get_number_validate_goods, get_results, get_description
+from telebot.types import InlineQueryResultArticle, InputTextMessageContent
 
 
 @bot.message_handler(func=lambda message: message.text == '📁 Каталог')
@@ -83,7 +83,6 @@ def back_to_age(callback):
 def select_type_size(callback):
     user_id = callback.from_user.id
     chat_id = callback.message.chat.id
-    bot.set_state(chat_id=chat_id, state=UserState.load, user_id=user_id)
     with bot.retrieve_data(user_id=user_id, chat_id=chat_id) as data:
         message_id = data['send_message_id']
         data['type_size'] = callback.data.split('|')[1]
@@ -125,22 +124,30 @@ def bot_inline_handler_load(query):
     _, type_goods, type_age, type_size = query.query.split('|')
     res_goods = get_results(type_goods, type_age, type_size)
     results = list()
-    for id, name_goods, vendor_code in res_goods:
+    for id, name_goods, vendor_code, description in res_goods:
         results.append(InlineQueryResultArticle(
             id=f'{type_goods}|{type_age}|{type_size}|{id}',
             title=name_goods,
-            thumb_url=f'http://photohost.stevenhorn.ru/picture/{id}.png',
+            description=description,
+            thumb_url=f'https://photohost.stevenhorn.ru/picture/{id}.png',
             input_message_content=InputTextMessageContent(
-                message_text=vendor_code)))
-    bot.answer_inline_query(inline_query_id=inline_query_id, results=results)
+                message_text=f'{vendor_code}|{type_goods}|{type_age}|{type_size}|{id}')))
+    res = bot.answer_inline_query(inline_query_id=inline_query_id, results=results)
+    if res is True:
+        user_id = query.from_user.id
+        bot.set_state(state=UserState.load, user_id=user_id)
 
 
 @bot.message_handler(state=UserState.load)
 def load(message):
+    vendor_code, type_goods, type_age, type_size, id = message.text.split('|')
     chat_id = message.chat.id
     user_id = message.from_user.id
     vendor_code = message.text
     message_id = message.id
-    bot.delete_message(chat_id=chat_id, message_id=message_id)
+    description = get_description(type_goods, type_age, type_size)[0]
 
-    print(vendor_code)
+    bot.delete_message(chat_id=chat_id, message_id=message_id)
+    bot.send_photo(chat_id=chat_id, photo=f'https://photohost.stevenhorn.ru/picture/{id}.png', caption=description, reply_markup=clarifying_keyboard())
+
+

@@ -34,5 +34,5 @@ DEFAULT_COMMANDS = (
     ('news', 'Наши новости и акции'),
     ('setting', 'Настройки'),
     ('help', 'Справка'),
-    ('about', 'О проекте')
+    ('about_project', 'О проекте')
 )

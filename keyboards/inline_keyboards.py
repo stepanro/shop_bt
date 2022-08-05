@@ -54,3 +54,17 @@ def buy_keyboard(chat_id, user_id):
     inline_keyboard.add(InlineKeyboardButton(text='Удалить поиск', callback_data='delete_search'))
 
     return inline_keyboard
+
+
+def clarifying_keyboard():
+    inline_keyboard = InlineKeyboardMarkup(row_width=3)
+    inline_keyboard.add(InlineKeyboardButton(text='Купить', callback_data='buy'))
+    inline_keyboard.add(
+                        InlineKeyboardButton(text='➖', callback_data='➖'),
+                        InlineKeyboardButton(text='1 шт.', callback_data='1 шт.'),
+                        InlineKeyboardButton(text='➕', callback_data='➕')
+                        )
+    inline_keyboard.add(InlineKeyboardButton(text='Добавить в избранное', callback_data='Добавить в избранное'))
+    inline_keyboard.add(InlineKeyboardButton(text='Корзина', callback_data='Корзина'))
+
+    return inline_keyboard

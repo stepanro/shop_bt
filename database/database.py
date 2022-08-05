@@ -88,12 +88,26 @@ def get_results(type_goods, type_age, type_size):
     """ Функция запрашивает из базы данных валидные товары """
     actual_connect = DatabaseConnectionSingleton()
     cursor = actual_connect.cursor()
-    command = """SELECT `id`, `name_goods`, `vendor_code` FROM `diapers` WHERE `type_goods` = '{type_goods}' AND `age` = '{age}' AND `size` = '{type_size}' """.format(type_goods=type_goods, age=type_age, type_size=type_size)
+    command = """SELECT `id`, `name_goods`, `vendor_code`, `description` FROM `diapers` WHERE `type_goods` = '{type_goods}' AND `age` = '{age}' AND `size` = '{type_size}' """.format(type_goods=type_goods, age=type_age, type_size=type_size)
     count_results = list()
     cursor.execute(command)
 
-    for id, name_goods, vendor_code in cursor.fetchall():
-        count_results.append((id, name_goods, vendor_code))
+    for id, name_goods, vendor_code, description in cursor.fetchall():
+        count_results.append((id, name_goods, vendor_code, description))
+
+    return tuple(count_results)
+
+
+def get_description(type_goods, type_age, type_size):
+    """ Функция запрашивает из базы данных валидные товары """
+    actual_connect = DatabaseConnectionSingleton()
+    cursor = actual_connect.cursor()
+    command = """SELECT `description` FROM `diapers` WHERE `type_goods` = '{type_goods}' AND `age` = '{age}' AND `size` = '{type_size}' """.format(type_goods=type_goods, age=type_age, type_size=type_size)
+    count_results = list()
+    cursor.execute(command)
+
+    for description in cursor.fetchall():
+        count_results.append(description)
 
     return tuple(count_results)
 
